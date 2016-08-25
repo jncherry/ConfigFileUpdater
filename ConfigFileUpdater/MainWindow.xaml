@@ -1,0 +1,56 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ConfigFileUpdater"
+        xmlns:Properties="clr-namespace:ConfigFileUpdater.Properties" x:Class="ConfigFileUpdater.MainWindow"
+        mc:Ignorable="d"
+        Title="Config File Updater" Height="225.422" Width="525" Loaded="Window_Loaded">
+    <Window.Resources>
+        <CollectionViewSource x:Key="settingsViewSource" d:DesignSource="{d:DesignInstance {x:Type Properties:Settings}, CreateList=True}"/>
+    </Window.Resources>
+    <Grid Margin="0,0,0,146">
+        <StackPanel Margin="0,0,0,-146">
+            <Menu Height="25">
+                <MenuItem x:Name="FileMenu" Header="File">
+                    <MenuItem x:Name="SetReopLocation" Header="Set Repo Location" Click="MenuItem_Click" Margin="0,0,-1,0" HorizontalAlignment="Left" Width="180" RenderTransformOrigin="0.361,0.493"/>
+                </MenuItem>
+            </Menu>
+            <StackPanel Height="129" RenderTransformOrigin="0.499,0.558">
+                <TextBlock x:Name="tbNotifications" TextWrapping="Wrap" Text="  No file selected..." Margin="10,0"/>
+                <StackPanel Orientation="Vertical" Height="108" Margin="84,0,68,0">
+                    <ComboBox x:Name="cboFileList" SelectionChanged="cboFileList_SelectionChanged" DropDownOpened="cboFileList_DropDownOpened">
+                        <ComboBox.DataContext>
+                            <local:FileOperations/>
+                        </ComboBox.DataContext>
+                    </ComboBox>
+                    <Grid Height="85" Margin="5,5,5,5">
+                        <Button x:Name="btnSwapFiles" Grid.Row="0" IsEnabled="{Binding SelectedItems.Count, ElementName=cboFileList}" Content="Swap Files" 
+                                Margin="115,0,115,56" Click="btnSwapFiles_Click" ToolTip="Copy the contents of the selected config file to DeviceConfig_DISPENSER.ini"/>
+                        <Button x:Name="btnViewCurrent" Content="View Current" Margin="115,40,115,16" Click="Button_Click" 
+                                ToolTip="Opens the current DeviceConfig_DISPENSER.ini in Notepad++ (if available) or notepad"/>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+            <Grid x:Name="grid1" DataContext="{StaticResource settingsViewSource}" VerticalAlignment="Top" Height="38" HorizontalAlignment="Left" Width="454">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center" x:Name="label" 
+                   Content="Current Repo Location:" Width="133" RenderTransformOrigin="0.434,3.458" Height="28"/>
+                <Label x:Name="currentRepoLocationLabel" 
+                   HorizontalAlignment="Left" Margin="1,4,0,6" VerticalAlignment="Center" Width="304" 
+                   ToolTip="Current Sequoia Repository Location" Content="{Binding Default.CurrentRepoLocation, BindsDirectlyToSource=True, Mode=OneWay, NotifyOnSourceUpdated=True}" Grid.Column="1">
+                    <Label.DataContext>
+                        <Properties:Settings/>
+                    </Label.DataContext>
+                </Label>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>
