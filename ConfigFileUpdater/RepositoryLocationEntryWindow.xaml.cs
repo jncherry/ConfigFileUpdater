@@ -15,6 +15,7 @@ namespace ConfigFileUpdater
         {
             InitializeComponent();
             Window = window;
+            txtRepoLocation.Focus();
         }
 
         private void btnRestore_Click(object sender, RoutedEventArgs e)

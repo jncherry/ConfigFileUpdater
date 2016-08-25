@@ -15,11 +15,11 @@
 
             <StackPanel Height="82" Margin="10,0">
                 <Label x:Name="lblEnterRepositoryLocation" Content="Enter path to local repository location:" Margin="2,2,2,2" />
-                <TextBox x:Name="txtRepoLocation" Height="23" TextWrapping="Wrap" ToolTip="Enter the path to your local Sequoia Repository" Margin="10,0"/>
+                <TextBox x:Name="txtRepoLocation" Height="23" TextWrapping="Wrap" ToolTip="Enter the path to your local Sequoia Repository" Margin="10,0" TabIndex="0"/>
                 <Grid Margin="5,5,5,5">
                     <Button x:Name="btnSetRepoLocation" Grid.Column="0" Content="Set Location" HorizontalAlignment="Left" Width="135"
-                            ToolTip="Sets the expected location of the local Sequoia Repository" Click="btnSetRepoLocation_Click" Margin="247,0,0,0"/>
-                    <Button x:Name="btnRestore" Content="Restore Default" Click="btnRestore_Click" Margin="0,0,247,0" HorizontalAlignment="Right" Width="135"/>
+                            ToolTip="Sets the expected location of the local Sequoia Repository" Click="btnSetRepoLocation_Click" Margin="247,0,0,0" TabIndex="1"/>
+                    <Button x:Name="btnRestore" Content="Restore Default" Click="btnRestore_Click" Margin="0,0,247,0" HorizontalAlignment="Right" Width="135" TabIndex="2"/>
                 </Grid>
 
             </StackPanel>
