@@ -34,5 +34,17 @@ namespace ConfigFileUpdater.Properties {
                 this["CurrentRepoLocation"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastSelectedFile {
+            get {
+                return ((string)(this["LastSelectedFile"]));
+            }
+            set {
+                this["LastSelectedFile"] = value;
+            }
+        }
     }
 }

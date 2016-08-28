@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ConfigFileUpdater"
         xmlns:Properties="clr-namespace:ConfigFileUpdater.Properties" x:Class="ConfigFileUpdater.RepositoryLocationEntryWindow"
         mc:Ignorable="d"
-        Title="Enter Custom Repo Location" Height="170.339" Width="449.999" Loaded="Window_Loaded" Closed="Window_Closed">
+        Title="Enter Custom Repo Location" Height="170.339" Width="449.999">
     <Window.Resources>
         <CollectionViewSource x:Key="settingsViewSource" d:DesignSource="{d:DesignInstance {x:Type Properties:Settings}, CreateList=True}"/>
     </Window.Resources>
@@ -18,7 +18,7 @@
                 <TextBox x:Name="txtRepoLocation" Height="23" TextWrapping="Wrap" ToolTip="Enter the path to your local Sequoia Repository" Margin="10,0" TabIndex="0"/>
                 <Grid Margin="5,5,5,5">
                     <Button x:Name="btnSetRepoLocation" Grid.Column="0" Content="Set Location" HorizontalAlignment="Left" Width="135"
-                            ToolTip="Sets the expected location of the local Sequoia Repository" Click="btnSetRepoLocation_Click" Margin="247,0,0,0" TabIndex="1"/>
+                            ToolTip="Sets the expected location of the local Sequoia Repository" Click="btnSetRepoLocation_Click" Margin="247,0,0,0" TabIndex="1" IsDefault="True"/>
                     <Button x:Name="btnRestore" Content="Restore Default" Click="btnRestore_Click" Margin="0,0,247,0" HorizontalAlignment="Right" Width="135" TabIndex="2"/>
                 </Grid>
 

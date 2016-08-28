@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ConfigFileUpdater"
         xmlns:Properties="clr-namespace:ConfigFileUpdater.Properties" x:Class="ConfigFileUpdater.MainWindow"
         mc:Ignorable="d"
-        Title="Config File Updater" Height="225.422" Width="525" Loaded="Window_Loaded">
+        Title="Config File Updater" Height="243.74" Width="550" Loaded="Window_Loaded" ResizeMode="CanMinimize">
     <Window.Resources>
         <CollectionViewSource x:Key="settingsViewSource" d:DesignSource="{d:DesignInstance {x:Type Properties:Settings}, CreateList=True}"/>
     </Window.Resources>
@@ -17,23 +17,23 @@
                     <MenuItem x:Name="SetReopLocation" Header="Set Repo Location" Click="MenuItem_Click" Margin="0,0,-1,0" HorizontalAlignment="Left" Width="180" RenderTransformOrigin="0.361,0.493"/>
                 </MenuItem>
             </Menu>
-            <StackPanel Height="129" RenderTransformOrigin="0.499,0.558">
-                <TextBlock x:Name="tbNotifications" TextWrapping="Wrap" Text="  No file selected..." Margin="10,0"/>
-                <StackPanel Orientation="Vertical" Height="108" Margin="84,0,68,0">
-                    <ComboBox x:Name="cboFileList" SelectionChanged="cboFileList_SelectionChanged" DropDownOpened="cboFileList_DropDownOpened">
+            <StackPanel Height="152" RenderTransformOrigin="0.499,0.558">
+                <TextBlock x:Name="tbNotifications" TextWrapping="Wrap" Text="  No file selected..." Margin="10,0" Height="37"/>
+                <StackPanel Orientation="Vertical" Height="130" Margin="76,0">
+                    <ComboBox x:Name="cboFileList" DropDownClosed="cboFileList_DropDownClosed" DropDownOpened="cboFileList_DropDownOpened" Height="23">
                         <ComboBox.DataContext>
                             <local:FileOperations/>
                         </ComboBox.DataContext>
                     </ComboBox>
-                    <Grid Height="85" Margin="5,5,5,5">
+                    <Grid Height="90" Margin="5,5,5,5">
                         <Button x:Name="btnSwapFiles" Grid.Row="0" IsEnabled="{Binding SelectedItems.Count, ElementName=cboFileList}" Content="Swap Files" 
                                 Margin="115,0,115,56" Click="btnSwapFiles_Click" ToolTip="Copy the contents of the selected config file to DeviceConfig_DISPENSER.ini"/>
-                        <Button x:Name="btnViewCurrent" Content="View Current" Margin="115,40,115,16" Click="Button_Click" 
-                                ToolTip="Opens the current DeviceConfig_DISPENSER.ini in Notepad++ (if available) or notepad"/>
+                        <Button x:Name="btnViewCurrent" Content="View Current" Margin="115,40,115,16" 
+                                ToolTip="Opens the current DeviceConfig_DISPENSER.ini in Notepad++ (if available) or notepad" Click="btnViewCurrent_Click"/>
                     </Grid>
                 </StackPanel>
             </StackPanel>
-            <Grid x:Name="grid1" DataContext="{StaticResource settingsViewSource}" VerticalAlignment="Top" Height="38" HorizontalAlignment="Left" Width="454">
+            <Grid x:Name="grid1" DataContext="{StaticResource settingsViewSource}" VerticalAlignment="Bottom" Height="36" Margin="1,0,10,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>

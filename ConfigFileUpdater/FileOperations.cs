@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Media;
 
@@ -17,17 +17,20 @@ namespace ConfigFileUpdater
         public FileOperations()
         { }
 
-        public List<string> GetFileList(string filePath)
+        public ObservableCollection<string> GetFileList(string filePath)
         {
-            string path = filePath;
-            List<string> fileList = new List<string>();
-            var directoryContents = Directory.GetFiles(path);
+            ObservableCollection<string> fileList = new ObservableCollection<string>();
+            var directoryContents = Directory.GetFiles(filePath);
 
-            Directory.SetCurrentDirectory(path);
+            Directory.SetCurrentDirectory(filePath);
 
             foreach (var file in directoryContents)
             {
-                fileList.Add(Path.GetFileName(file));
+                string directory = directoryContents.ToString();
+                if (file.Contains(".bak"))
+                {
+                    fileList.Add(Path.GetFileName(file));
+                }                
             }
             fileList.Add("Default");
 
@@ -41,14 +44,7 @@ namespace ConfigFileUpdater
 
             try
             {
-                if (sourceFileName == "" || sourceFileName == null)
-                {
-                    Window.tbNotifications.Text = "No File Selected!";
-                    Window.tbNotifications.Background = new SolidColorBrush(Colors.Red);
-                    Window.tbNotifications.Foreground = new SolidColorBrush(Colors.White);
-                    return;
-                }
-                else if (sourceFileName == "Default")
+                if (sourceFileName == "Default" && RepoFound(Window.repoLocation))
                 {
                     reader = new StreamReader(Window.repoLocation + "Programs\\DeviceConfig_DISPENSER.dft");
                     writer = new StreamWriter(Window.repoLocation + "Programs\\DeviceConfig_DISPENSER.ini");
@@ -63,7 +59,7 @@ namespace ConfigFileUpdater
                     reader.Close();
                     writer.Close();
                 }
-                else
+                else if (sourceFileName != "Default" && RepoFound(Window.repoLocation))
                 {
                     reader = new StreamReader(Directory.GetCurrentDirectory() + "\\" + sourceFileName);
                     writer = new StreamWriter(Window.repoLocation + "Programs\\DeviceConfig_DISPENSER.ini");
@@ -83,6 +79,35 @@ namespace ConfigFileUpdater
             {
                 throw;
             }
+        }
+
+        public bool RepoFound(string directoryName)
+        {
+            bool repoFound = false;
+
+            if (Directory.Exists(directoryName))
+            {
+                repoFound = true;
+                Window.tbNotifications.Background = new SolidColorBrush(Colors.White);
+                Window.tbNotifications.Foreground = new SolidColorBrush(Colors.Black);
+                Window.btnViewCurrent.IsEnabled = true;
+            }
+
+            return repoFound;
+        }
+
+        public bool DoesFileListContainLastSelected(string directoryLocation)
+        {
+            bool itemFound = false;
+            string lastSelected = Properties.Settings.Default.LastSelectedFile;
+            var list = GetFileList(directoryLocation + "AcceptanceTests\\CommonData\\IniFilesForAAT\\");
+
+            if (list.Contains(lastSelected))
+            {
+                itemFound = true;
+            }
+
+            return itemFound;
         }
     }
 }
