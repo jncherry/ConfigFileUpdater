@@ -21,8 +21,7 @@ namespace ConfigFileUpdater
         public MainWindow()
         {
             InitializeComponent();
-            FileOperations = new FileOperations(this);
-            RepositoryLocationEntryWindow = new RepositoryLocationEntryWindow(this);
+            FileOperations = new FileOperations(this);            
             UtilityMethods = new UtilityMethods(this, RepositoryLocationEntryWindow);            
             repoLocation = Properties.Settings.Default.CurrentRepoLocation;
 
@@ -92,6 +91,7 @@ namespace ConfigFileUpdater
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
+            RepositoryLocationEntryWindow = new RepositoryLocationEntryWindow(this);
             RepositoryLocationEntryWindow.Show();
         }
         

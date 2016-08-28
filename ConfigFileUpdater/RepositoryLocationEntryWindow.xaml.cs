@@ -47,7 +47,7 @@ namespace ConfigFileUpdater
                 }
                 Window.repoLocation = newRepoPath;
                 UtilityMethods.UpdateRepositoryLocation(newRepoPath);
-                Window.lastSelected = "";
+                //Window.lastSelected = "";
                 UtilityMethods.PopulateComboBox();
             }            
         }
