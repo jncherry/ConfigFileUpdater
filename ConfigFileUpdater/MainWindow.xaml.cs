@@ -25,6 +25,8 @@ namespace ConfigFileUpdater
             UtilityMethods = new UtilityMethods(this, RepositoryLocationEntryWindow);            
             repoLocation = Properties.Settings.Default.CurrentRepoLocation;
 
+            btnSwapFiles.IsEnabled = false;        
+
             if (FileOperations.RepoFound(repoLocation))
             {
                 lastSelected = Properties.Settings.Default.LastSelectedFile;
@@ -74,6 +76,7 @@ namespace ConfigFileUpdater
                 FileOperations.CopyToDeviceConfig(cboFileList.SelectedItem.ToString());
                 lastSelected = cboFileList.SelectedItem.ToString();
                 UtilityMethods.UpdateLastSelected(cboFileList.SelectedItem.ToString());
+                btnSwapFiles.IsEnabled = false;
             }
         }
 
@@ -104,8 +107,21 @@ namespace ConfigFileUpdater
                     cboFileList.SelectedIndex = (int)UtilityMethods.GetIndexOfLastSelected(lastSelected);
                 }
             }
-        }
 
+            if (cboFileList.SelectedItem == null)
+            {
+                return;
+            }
+            else if (cboFileList.SelectedItem.ToString() != lastSelected)
+            {
+                btnSwapFiles.IsEnabled = true;
+            }
+            else
+            {
+                btnSwapFiles.IsEnabled = false;
+            }
+        }
+        
         private void MainWindow1_Closed(object sender, EventArgs e)
         {
             Properties.Settings.Default.Reload();
