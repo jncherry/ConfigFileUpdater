@@ -97,6 +97,7 @@
     <Compile Include="RepositoryLocationEntryWindow.xaml.cs">
       <DependentUpon>RepositoryLocationEntryWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UtilityMethods.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

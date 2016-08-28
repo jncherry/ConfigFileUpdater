@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace ConfigFileUpdater
 {
-    internal class FileOperations
+    public class FileOperations
     {
         MainWindow Window;
 
@@ -33,7 +33,6 @@ namespace ConfigFileUpdater
                 }                
             }
             fileList.Add("Default");
-
             return fileList;
         }
 
