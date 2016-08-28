@@ -54,7 +54,6 @@ namespace ConfigFileUpdater
                     }
 
                     Window.tbNotifications.Text = "Swap complete Sequoia now using " + sourceFileName + " configuration.";
-
                     reader.Close();
                     writer.Close();
                 }
@@ -69,7 +68,6 @@ namespace ConfigFileUpdater
                     }
 
                     Window.tbNotifications.Text = "Swap complete Sequoia now using " + sourceFileName + " configuration.";
-
                     reader.Close();
                     writer.Close();
                 }
@@ -91,7 +89,6 @@ namespace ConfigFileUpdater
                 Window.tbNotifications.Foreground = new SolidColorBrush(Colors.Black);
                 Window.btnViewCurrent.IsEnabled = true;
             }
-
             return repoFound;
         }
 
@@ -105,7 +102,6 @@ namespace ConfigFileUpdater
             {
                 itemFound = true;
             }
-
             return itemFound;
         }
     }
