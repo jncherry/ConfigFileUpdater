@@ -5,12 +5,12 @@ namespace ConfigFileUpdater
     /// <summary>
     /// Interaction logic for RepositoryLocationEntryWindow.xaml
     /// </summary>
-    public partial class RepositoryLocationEntryWindow : Window
+    public partial class RepositoryLocationEntryWindow
     {
-        MainWindow Window;
-        UtilityMethods UtilityMethods;
+        protected MainWindow Window;
+        protected UtilityMethods UtilityMethods;
 
-        private const string defaultRepoLocation = "C:\\Sequoia\\";
+        private const string DefaultRepoLocation = "C:\\Sequoia\\";
 
         public RepositoryLocationEntryWindow(MainWindow window)
         {
@@ -22,33 +22,30 @@ namespace ConfigFileUpdater
 
         private void btnRestore_Click(object sender, RoutedEventArgs e)
         {
-            if (Window.repoLocation == defaultRepoLocation)
+            if (Window.RepoLocation == DefaultRepoLocation)
             {
                 Close();
                 return;
             }                
-            Window.repoLocation = defaultRepoLocation;
-            UtilityMethods.UpdateRepositoryLocation(defaultRepoLocation);
+            Window.RepoLocation = DefaultRepoLocation;
+            UtilityMethods.UpdateRepositoryLocation(DefaultRepoLocation);
         }
 
         private void btnSetRepoLocation_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(txtRepoLocation.Text)) return;
             string newRepoPath;
-
-            if (txtRepoLocation.Text != null && txtRepoLocation.Text != "")
+            if (!txtRepoLocation.Text.EndsWith("\\"))
             {
-                if (!txtRepoLocation.Text.EndsWith("\\"))
-                {
-                    newRepoPath = txtRepoLocation.Text + "\\";
-                }
-                else
-                {
-                    newRepoPath = txtRepoLocation.Text;
-                }
-                Window.repoLocation = newRepoPath;
-                UtilityMethods.UpdateRepositoryLocation(newRepoPath);
-                UtilityMethods.PopulateComboBox();
-            }            
+                newRepoPath = txtRepoLocation.Text + "\\";
+            }
+            else
+            {
+                newRepoPath = txtRepoLocation.Text;
+            }
+            Window.RepoLocation = newRepoPath;
+            UtilityMethods.UpdateRepositoryLocation(newRepoPath);
+            UtilityMethods.PopulateComboBox();
         }
     }
 }

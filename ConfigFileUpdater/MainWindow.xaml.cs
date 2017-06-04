@@ -10,26 +10,24 @@ namespace ConfigFileUpdater
     /// </summary>
     public partial class MainWindow
     {
-        FileOperations FileOperations;
-        UtilityMethods UtilityMethods;
-        RepositoryLocationEntryWindow RepositoryLocationEntryWindow;
+        protected FileOperations FileOperations;
+        protected UtilityMethods UtilityMethods;
+        protected RepositoryLocationEntryWindow RepositoryLocationEntryWindow;
 
-        public string repoLocation { get; set; }
-        public string lastSelected { get; set; }
-        public ObservableCollection<string> fileList { get; set; }
+        public string RepoLocation { get; set; }
+        public string LastSelected { get; set; }
+        public ObservableCollection<string> FileList { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
             FileOperations = new FileOperations(this);            
             UtilityMethods = new UtilityMethods(this, RepositoryLocationEntryWindow);            
-            repoLocation = Properties.Settings.Default.CurrentRepoLocation;
+            RepoLocation = Properties.Settings.Default.CurrentRepoLocation;
 
-            btnSwapFiles.IsEnabled = false;        
-
-            if (FileOperations.RepoFound(repoLocation))
+            if (FileOperations.RepoFound(RepoLocation))
             {
-                lastSelected = Properties.Settings.Default.LastSelectedFile;
+                LastSelected = Properties.Settings.Default.LastSelectedFile;
             }
             else
             {
@@ -39,28 +37,28 @@ namespace ConfigFileUpdater
             cboFileList.Items.Clear();
             UtilityMethods.PopulateComboBox();
 
-            if (Properties.Settings.Default.LastSelectedFile == null || Properties.Settings.Default.LastSelectedFile == "" || !FileOperations.RepoFound(repoLocation))
-            {
-                return;
-            }
-            else
-            {
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.LastSelectedFile) && FileOperations.RepoFound(RepoLocation))
                 try
                 {
-                    cboFileList.SelectedItem = cboFileList.Items[(int)UtilityMethods.GetIndexOfLastSelected(Properties.Settings.Default.LastSelectedFile)];
+                    var indexOfLastSelected =
+                        UtilityMethods.GetIndexOfLastSelected(Properties.Settings.Default.LastSelectedFile);
+                    if (indexOfLastSelected != null)
+                        cboFileList.SelectedItem =
+                            cboFileList.Items[
+                                (int) indexOfLastSelected];
                     tbNotifications.Text = "The last selected backup file was:";
                 }
                 catch (Exception)
                 {
                     cboFileList.SelectedIndex = -1;
                     tbNotifications.Text = "";
-                }                
-            }            
+                }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            System.Windows.Data.CollectionViewSource settingsViewSource = ((System.Windows.Data.CollectionViewSource)(FindResource("settingsViewSource")));
+            System.Windows.Data.CollectionViewSource settingsViewSource = (System.Windows.Data.CollectionViewSource)FindResource("settingsViewSource");
+            if (settingsViewSource == null) throw new ArgumentNullException(nameof(settingsViewSource));
         }        
 
         private void cboFileList_DropDownOpened(object sender, EventArgs e)
@@ -71,18 +69,15 @@ namespace ConfigFileUpdater
 
         private void btnSwapFiles_Click(object sender, RoutedEventArgs e)
         {
-            if (cboFileList.SelectedIndex != -1 || cboFileList.SelectedItem.ToString() != "")
-            {
-                FileOperations.CopyToDeviceConfig(cboFileList.SelectedItem.ToString());
-                lastSelected = cboFileList.SelectedItem.ToString();
-                UtilityMethods.UpdateLastSelected(cboFileList.SelectedItem.ToString());
-                btnSwapFiles.IsEnabled = false;
-            }
+            if (cboFileList.SelectedIndex == -1 && cboFileList.SelectedItem.ToString() == "") return;
+            FileOperations.CopyToDeviceConfig(cboFileList.SelectedItem.ToString());
+            LastSelected = cboFileList.SelectedItem.ToString();
+            UtilityMethods.UpdateLastSelected(cboFileList.SelectedItem.ToString());
         }
 
         private void btnViewCurrent_Click(object sender, RoutedEventArgs e)
         {
-            if (!FileOperations.RepoFound(repoLocation))
+            if (!FileOperations.RepoFound(RepoLocation))
             {
                 tbNotifications.Background = new SolidColorBrush(Colors.Red);
                 tbNotifications.Foreground = new SolidColorBrush(Colors.White);
@@ -102,31 +97,16 @@ namespace ConfigFileUpdater
         {
             if (cboFileList.SelectedItem == null || cboFileList.SelectedItem.ToString() == "")
             {
-                if (lastSelected != "" && FileOperations.RepoFound(repoLocation) && FileOperations.DoesFileListContainLastSelected(repoLocation))
+                if (LastSelected != "" && FileOperations.RepoFound(RepoLocation) && FileOperations.DoesFileListContainLastSelected(RepoLocation))
                 {
-                    cboFileList.SelectedIndex = (int)UtilityMethods.GetIndexOfLastSelected(lastSelected);
+                    var indexOfLastSelected = UtilityMethods.GetIndexOfLastSelected(LastSelected);
+                    if (indexOfLastSelected != null)
+                        cboFileList.SelectedIndex = (int) indexOfLastSelected;
                 }
             }
 
-            if (cboFileList.SelectedItem == null)
-            {
-                return;
-            }
-            else if (cboFileList.SelectedItem.ToString() != lastSelected)
-            {
-                btnSwapFiles.IsEnabled = true;
-            }
-            else
-            {
-                btnSwapFiles.IsEnabled = false;
-            }
-        }
-        
-        private void MainWindow1_Closed(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.Reload();
-            Properties.Settings.Default.Upgrade();
-            Properties.Settings.Default.Save();
+            if (cboFileList.SelectedItem != null)
+                btnSwapFiles.IsEnabled = cboFileList.SelectedItem.ToString() != LastSelected;
         }
     }
 }

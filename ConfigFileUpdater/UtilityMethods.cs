@@ -1,14 +1,13 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows.Media;
 
 namespace ConfigFileUpdater
 {
     public class UtilityMethods
-    {        
-        MainWindow Window;
-        FileOperations FileOperations;
-        RepositoryLocationEntryWindow RepositoryLocationEntryWindow;
+    {
+        protected MainWindow Window;
+        protected FileOperations FileOperations;
+        protected RepositoryLocationEntryWindow RepositoryLocationEntryWindow;
 
         public UtilityMethods(MainWindow window, RepositoryLocationEntryWindow repositoryLocationEntryWindow)
         {
@@ -22,20 +21,14 @@ namespace ConfigFileUpdater
 
         public void PopulateComboBox()
         {
-            if (FileOperations.RepoFound(Window.repoLocation))
+            if (FileOperations.RepoFound(Window.RepoLocation))
             {
-                try
-                {
-                    Window.fileList = FileOperations.GetFileList(Window.repoLocation + "AcceptanceTests\\CommonData\\IniFilesForAAT\\");
+                Window.FileList =
+                    FileOperations.GetFileList(Window.RepoLocation + "AcceptanceTests\\CommonData\\IniFilesForAAT\\");
 
-                    foreach (var t in Window.fileList)
-                    {
-                        Window.cboFileList.Items.Add(t);
-                    }
-                }
-                catch (Exception)
+                foreach (var t in Window.FileList)
                 {
-                    return;
+                    Window.cboFileList.Items.Add(t);
                 }
             }
             else
@@ -73,7 +66,7 @@ namespace ConfigFileUpdater
         {
             Window.tbNotifications.Background = new SolidColorBrush(Colors.Red);
             Window.tbNotifications.Foreground = new SolidColorBrush(Colors.White);
-            Window.tbNotifications.Text = ("The selected repo '" + Window.repoLocation + "' was not found! Set Repo location via: File -> Set Repo Location.");
+            Window.tbNotifications.Text = ("The selected repo '" + Window.RepoLocation + "' was not found! Set Repo location via: File -> Set Repo Location.");
             Window.cboFileList.Items.Clear();
             Window.btnViewCurrent.IsEnabled = false;
         }
@@ -104,7 +97,7 @@ namespace ConfigFileUpdater
 
         public void CheckNewDirForLastSelected(string repoLocation)
         {
-            string lastSelected = Properties.Settings.Default.LastSelectedFile;
+            var lastSelected = Properties.Settings.Default.LastSelectedFile;
 
             if (!FileOperations.GetFileList(repoLocation + "AcceptanceTests\\CommonData\\IniFilesForAAT\\").Contains(lastSelected))
             {
@@ -114,7 +107,9 @@ namespace ConfigFileUpdater
             }
             else
             {
-                Window.cboFileList.SelectedIndex = (int)GetIndexOfLastSelected(lastSelected);
+                var indexOfLastSelected = GetIndexOfLastSelected(lastSelected);
+                if (indexOfLastSelected != null)
+                    Window.cboFileList.SelectedIndex = (int) indexOfLastSelected;
                 Window.tbNotifications.Text = "The last selected backup file was:";
             }
         }
@@ -123,11 +118,11 @@ namespace ConfigFileUpdater
         {
             try
             {
-                Process.Start("Notepad++.exe", Window.repoLocation + "Programs\\DeviceConfig_DISPENSER.ini");
+                Process.Start("Notepad++.exe", Window.RepoLocation + "Programs\\DeviceConfig_DISPENSER.ini");
             }
             catch
             {
-                Process.Start("Notepad.exe", Window.repoLocation + "Programs\\DeviceConfig_DISPENSER.ini");
+                Process.Start("Notepad.exe", Window.RepoLocation + "Programs\\DeviceConfig_DISPENSER.ini");
             }
         }
     }

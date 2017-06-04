@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Media;
 
@@ -7,7 +6,11 @@ namespace ConfigFileUpdater
 {
     public class FileOperations
     {
-        MainWindow Window;
+        protected MainWindow Window;
+        private static StreamReader _streamReader;
+        private static StreamWriter _streamWriter;
+        private string _sourceFile;
+        private string _destinatoinFile;
 
         public FileOperations(MainWindow window)
         {
@@ -26,7 +29,6 @@ namespace ConfigFileUpdater
 
             foreach (var file in directoryContents)
             {
-                string directory = directoryContents.ToString();
                 if (file.Contains(".bak"))
                 {
                     fileList.Add(Path.GetFileName(file));
@@ -38,58 +40,42 @@ namespace ConfigFileUpdater
 
         public void CopyToDeviceConfig(string sourceFileName)
         {
-            StreamReader reader = null;
-            StreamWriter writer = null;
-
-            try
+            if (sourceFileName == "Default")
             {
-                if (sourceFileName == "Default" && RepoFound(Window.repoLocation))
-                {
-                    reader = new StreamReader(Window.repoLocation + "Programs\\DeviceConfig_DISPENSER.dft");
-                    writer = new StreamWriter(Window.repoLocation + "Programs\\DeviceConfig_DISPENSER.ini");
-
-                    while (!reader.EndOfStream)
-                    {
-                        writer.WriteLine(reader.ReadLine());
-                    }
-
-                    Window.tbNotifications.Text = "Swap complete Sequoia now using " + sourceFileName + " configuration.";
-                    reader.Close();
-                    writer.Close();
-                }
-                else if (sourceFileName != "Default" && RepoFound(Window.repoLocation))
-                {
-                    reader = new StreamReader(Directory.GetCurrentDirectory() + "\\" + sourceFileName);
-                    writer = new StreamWriter(Window.repoLocation + "Programs\\DeviceConfig_DISPENSER.ini");
-
-                    while (!reader.EndOfStream)
-                    {
-                        writer.WriteLine(reader.ReadLine());
-                    }
-
-                    Window.tbNotifications.Text = "Swap complete Sequoia now using " + sourceFileName + " configuration.";
-                    reader.Close();
-                    writer.Close();
-                }
+                _sourceFile = Window.RepoLocation + "Programs\\DeviceConfig_DISPENSER.dft";
+                _destinatoinFile = Window.RepoLocation + "Programs\\DeviceConfig_DISPENSER.ini";
+                SwapFileData(sourceFileName, _sourceFile, _destinatoinFile);
             }
-            catch (Exception)
+            else
             {
-                throw;
+                _sourceFile = Directory.GetCurrentDirectory() + "\\" + sourceFileName;
+                _destinatoinFile = Window.RepoLocation + "Programs\\DeviceConfig_DISPENSER.ini";
+                SwapFileData(sourceFileName, _sourceFile, _destinatoinFile);
             }
+        }
+
+        private void SwapFileData(string sourceFileName, string sourceFile, string destinatoinFile)
+        {
+            _streamReader = new StreamReader(sourceFile);
+            _streamWriter = new StreamWriter(destinatoinFile);
+
+            while (!_streamReader.EndOfStream)
+            {
+                _streamWriter.WriteLine(_streamReader.ReadLine());
+            }
+
+            Window.tbNotifications.Text = "Swap complete Sequoia now using " + sourceFileName + " configuration.";
+            _streamReader.Close();
+            _streamWriter.Close();
         }
 
         public bool RepoFound(string directoryName)
         {
-            bool repoFound = false;
-
-            if (Directory.Exists(directoryName))
-            {
-                repoFound = true;
-                Window.tbNotifications.Background = new SolidColorBrush(Colors.White);
-                Window.tbNotifications.Foreground = new SolidColorBrush(Colors.Black);
-                Window.btnViewCurrent.IsEnabled = true;
-            }
-            return repoFound;
+            if (!Directory.Exists(directoryName)) return false;
+            Window.tbNotifications.Background = new SolidColorBrush(Colors.White);
+            Window.tbNotifications.Foreground = new SolidColorBrush(Colors.Black);
+            Window.btnViewCurrent.IsEnabled = true;
+            return true;
         }
 
         public bool DoesFileListContainLastSelected(string directoryLocation)
